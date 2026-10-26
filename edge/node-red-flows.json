@@ -1,0 +1,1163 @@
+[
+ {
+  "id": "tabedge01",
+  "type": "tab",
+  "label": "Edge dashboard",
+  "disabled": false,
+  "info": "Raspberry Pi edge node: raw sensor data vs filtered data, throughput, alerts, control."
+ },
+ {
+  "id": "brokeredge",
+  "type": "mqtt-broker",
+  "name": "Edge Mosquitto (localhost)",
+  "broker": "localhost",
+  "port": "1883",
+  "clientid": "",
+  "autoConnect": true,
+  "usetls": false,
+  "protocolVersion": "4",
+  "keepalive": "60",
+  "cleansession": true,
+  "autoUnsubscribe": true
+ },
+ {
+  "id": "uibase01",
+  "type": "ui-base",
+  "name": "Edge",
+  "path": "/dashboard",
+  "appIcon": "",
+  "includeClientData": true,
+  "acceptsClientConfig": [
+   "ui-notification",
+   "ui-control"
+  ],
+  "showPathInSidebar": false,
+  "showPageTitle": true,
+  "navigationStyle": "default",
+  "titleBarStyle": "default"
+ },
+ {
+  "id": "uitheme01",
+  "type": "ui-theme",
+  "name": "Edge dark",
+  "colors": {
+   "surface": "#1c5cab",
+   "primary": "#3987e5",
+   "bgPage": "#121211",
+   "groupBg": "#1a1a19",
+   "groupOutline": "#2f2f2b"
+  },
+  "sizes": {
+   "density": "default",
+   "pagePadding": "12px",
+   "groupGap": "12px",
+   "groupBorderRadius": "8px",
+   "widgetGap": "12px"
+  }
+ },
+ {
+  "id": "uipage01",
+  "type": "ui-page",
+  "name": "Raspberry Pi edge node",
+  "ui": "uibase01",
+  "path": "/edge",
+  "icon": "chip",
+  "layout": "grid",
+  "theme": "uitheme01",
+  "breakpoints": [
+   {
+    "name": "Default",
+    "px": "0",
+    "cols": "3"
+   },
+   {
+    "name": "Tablet",
+    "px": "576",
+    "cols": "6"
+   },
+   {
+    "name": "Small Desktop",
+    "px": "768",
+    "cols": "9"
+   },
+   {
+    "name": "Desktop",
+    "px": "1024",
+    "cols": "12"
+   }
+  ],
+  "order": 1,
+  "className": "",
+  "visible": "true",
+  "disabled": "false"
+ },
+ {
+  "id": "grp0001",
+  "type": "ui-group",
+  "name": "Temperature (°C)",
+  "page": "uipage01",
+  "width": "6",
+  "height": "1",
+  "order": 1,
+  "showTitle": true,
+  "className": "",
+  "visible": "true",
+  "disabled": "false",
+  "groupType": "default"
+ },
+ {
+  "id": "cht0002",
+  "type": "ui-chart",
+  "z": "tabedge01",
+  "group": "grp0001",
+  "name": "Temperature: raw vs edge-filtered",
+  "label": "Temperature: raw vs edge-filtered",
+  "order": 1,
+  "chartType": "line",
+  "category": "topic",
+  "categoryType": "msg",
+  "xAxisLabel": "",
+  "xAxisProperty": "",
+  "xAxisPropertyType": "timestamp",
+  "xAxisType": "time",
+  "xAxisFormat": "",
+  "xAxisFormatType": "auto",
+  "yAxisLabel": "°C",
+  "yAxisProperty": "payload",
+  "yAxisPropertyType": "msg",
+  "ymin": "",
+  "ymax": "",
+  "bins": 10,
+  "action": "append",
+  "stackSeries": false,
+  "pointShape": "false",
+  "pointRadius": 2,
+  "showLegend": true,
+  "removeOlder": "3",
+  "removeOlderUnit": "60",
+  "removeOlderPoints": "1200",
+  "colors": [
+   "#3987e5",
+   "#8a8981",
+   "#1baf7a",
+   "#eda100",
+   "#e87ba4",
+   "#008300",
+   "#6250d6",
+   "#e34948",
+   "#9085e9"
+  ],
+  "textColor": [
+   "#c3c2b7"
+  ],
+  "textColorDefault": false,
+  "gridColor": [
+   "#2f2f2b"
+  ],
+  "gridColorDefault": false,
+  "width": 4,
+  "height": 4,
+  "className": "",
+  "interpolation": "linear",
+  "x": 900,
+  "y": 40,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "gau0003",
+  "type": "ui-gauge",
+  "z": "tabedge01",
+  "group": "grp0001",
+  "name": "Temperature (filtered)",
+  "gtype": "gauge-half",
+  "gstyle": "rounded",
+  "title": "Temperature (filtered)",
+  "units": "°C",
+  "icon": "",
+  "order": 2,
+  "value": "payload",
+  "valueType": "msg",
+  "width": 2,
+  "height": 3,
+  "min": 0,
+  "max": 50,
+  "sizeThickness": 16,
+  "sizeGap": 4,
+  "sizeKeyThickness": 8,
+  "styleRounded": true,
+  "styleGlow": false,
+  "segments": [
+   {
+    "from": "0",
+    "color": "#3987e5"
+   },
+   {
+    "from": "30",
+    "color": "#d03b3b"
+   }
+  ],
+  "className": "",
+  "x": 900,
+  "y": 90,
+  "wires": []
+ },
+ {
+  "id": "grp0004",
+  "type": "ui-group",
+  "name": "Humidity (%)",
+  "page": "uipage01",
+  "width": "6",
+  "height": "1",
+  "order": 2,
+  "showTitle": true,
+  "className": "",
+  "visible": "true",
+  "disabled": "false",
+  "groupType": "default"
+ },
+ {
+  "id": "cht0005",
+  "type": "ui-chart",
+  "z": "tabedge01",
+  "group": "grp0004",
+  "name": "Humidity: raw vs edge-filtered",
+  "label": "Humidity: raw vs edge-filtered",
+  "order": 1,
+  "chartType": "line",
+  "category": "topic",
+  "categoryType": "msg",
+  "xAxisLabel": "",
+  "xAxisProperty": "",
+  "xAxisPropertyType": "timestamp",
+  "xAxisType": "time",
+  "xAxisFormat": "",
+  "xAxisFormatType": "auto",
+  "yAxisLabel": "%",
+  "yAxisProperty": "payload",
+  "yAxisPropertyType": "msg",
+  "ymin": "",
+  "ymax": "",
+  "bins": 10,
+  "action": "append",
+  "stackSeries": false,
+  "pointShape": "false",
+  "pointRadius": 2,
+  "showLegend": true,
+  "removeOlder": "3",
+  "removeOlderUnit": "60",
+  "removeOlderPoints": "1200",
+  "colors": [
+   "#d95926",
+   "#8a8981",
+   "#1baf7a",
+   "#eda100",
+   "#e87ba4",
+   "#008300",
+   "#6250d6",
+   "#e34948",
+   "#9085e9"
+  ],
+  "textColor": [
+   "#c3c2b7"
+  ],
+  "textColorDefault": false,
+  "gridColor": [
+   "#2f2f2b"
+  ],
+  "gridColorDefault": false,
+  "width": 4,
+  "height": 4,
+  "className": "",
+  "interpolation": "linear",
+  "x": 900,
+  "y": 140,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "gau0006",
+  "type": "ui-gauge",
+  "z": "tabedge01",
+  "group": "grp0004",
+  "name": "Humidity (filtered)",
+  "gtype": "gauge-half",
+  "gstyle": "rounded",
+  "title": "Humidity (filtered)",
+  "units": "%",
+  "icon": "",
+  "order": 2,
+  "value": "payload",
+  "valueType": "msg",
+  "width": 2,
+  "height": 3,
+  "min": 0,
+  "max": 100,
+  "sizeThickness": 16,
+  "sizeGap": 4,
+  "sizeKeyThickness": 8,
+  "styleRounded": true,
+  "styleGlow": false,
+  "segments": [
+   {
+    "from": "0",
+    "color": "#d95926"
+   },
+   {
+    "from": "80",
+    "color": "#d03b3b"
+   }
+  ],
+  "className": "",
+  "x": 900,
+  "y": 190,
+  "wires": []
+ },
+ {
+  "id": "grp0007",
+  "type": "ui-group",
+  "name": "Pressure (hPa)",
+  "page": "uipage01",
+  "width": "6",
+  "height": "1",
+  "order": 3,
+  "showTitle": true,
+  "className": "",
+  "visible": "true",
+  "disabled": "false",
+  "groupType": "default"
+ },
+ {
+  "id": "cht0008",
+  "type": "ui-chart",
+  "z": "tabedge01",
+  "group": "grp0007",
+  "name": "Pressure: raw vs edge-filtered",
+  "label": "Pressure: raw vs edge-filtered",
+  "order": 1,
+  "chartType": "line",
+  "category": "topic",
+  "categoryType": "msg",
+  "xAxisLabel": "",
+  "xAxisProperty": "",
+  "xAxisPropertyType": "timestamp",
+  "xAxisType": "time",
+  "xAxisFormat": "",
+  "xAxisFormatType": "auto",
+  "yAxisLabel": "hPa",
+  "yAxisProperty": "payload",
+  "yAxisPropertyType": "msg",
+  "ymin": "",
+  "ymax": "",
+  "bins": 10,
+  "action": "append",
+  "stackSeries": false,
+  "pointShape": "false",
+  "pointRadius": 2,
+  "showLegend": true,
+  "removeOlder": "3",
+  "removeOlderUnit": "60",
+  "removeOlderPoints": "1200",
+  "colors": [
+   "#199e70",
+   "#8a8981",
+   "#1baf7a",
+   "#eda100",
+   "#e87ba4",
+   "#008300",
+   "#6250d6",
+   "#e34948",
+   "#9085e9"
+  ],
+  "textColor": [
+   "#c3c2b7"
+  ],
+  "textColorDefault": false,
+  "gridColor": [
+   "#2f2f2b"
+  ],
+  "gridColorDefault": false,
+  "width": 4,
+  "height": 4,
+  "className": "",
+  "interpolation": "linear",
+  "x": 900,
+  "y": 240,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "gau0009",
+  "type": "ui-gauge",
+  "z": "tabedge01",
+  "group": "grp0007",
+  "name": "Pressure (filtered)",
+  "gtype": "gauge-half",
+  "gstyle": "rounded",
+  "title": "Pressure (filtered)",
+  "units": "hPa",
+  "icon": "",
+  "order": 2,
+  "value": "payload",
+  "valueType": "msg",
+  "width": 2,
+  "height": 3,
+  "min": 980,
+  "max": 1050,
+  "sizeThickness": 16,
+  "sizeGap": 4,
+  "sizeKeyThickness": 8,
+  "styleRounded": true,
+  "styleGlow": false,
+  "segments": [
+   {
+    "from": "980",
+    "color": "#199e70"
+   }
+  ],
+  "className": "",
+  "x": 900,
+  "y": 290,
+  "wires": []
+ },
+ {
+  "id": "grp000a",
+  "type": "ui-group",
+  "name": "Air quality CO₂ (ppm)",
+  "page": "uipage01",
+  "width": "6",
+  "height": "1",
+  "order": 4,
+  "showTitle": true,
+  "className": "",
+  "visible": "true",
+  "disabled": "false",
+  "groupType": "default"
+ },
+ {
+  "id": "cht000b",
+  "type": "ui-chart",
+  "z": "tabedge01",
+  "group": "grp000a",
+  "name": "Air quality CO₂: raw vs edge-filtered",
+  "label": "Air quality CO₂: raw vs edge-filtered",
+  "order": 1,
+  "chartType": "line",
+  "category": "topic",
+  "categoryType": "msg",
+  "xAxisLabel": "",
+  "xAxisProperty": "",
+  "xAxisPropertyType": "timestamp",
+  "xAxisType": "time",
+  "xAxisFormat": "",
+  "xAxisFormatType": "auto",
+  "yAxisLabel": "ppm",
+  "yAxisProperty": "payload",
+  "yAxisPropertyType": "msg",
+  "ymin": "",
+  "ymax": "",
+  "bins": 10,
+  "action": "append",
+  "stackSeries": false,
+  "pointShape": "false",
+  "pointRadius": 2,
+  "showLegend": true,
+  "removeOlder": "3",
+  "removeOlderUnit": "60",
+  "removeOlderPoints": "1200",
+  "colors": [
+   "#c98500",
+   "#8a8981",
+   "#1baf7a",
+   "#eda100",
+   "#e87ba4",
+   "#008300",
+   "#6250d6",
+   "#e34948",
+   "#9085e9"
+  ],
+  "textColor": [
+   "#c3c2b7"
+  ],
+  "textColorDefault": false,
+  "gridColor": [
+   "#2f2f2b"
+  ],
+  "gridColorDefault": false,
+  "width": 4,
+  "height": 4,
+  "className": "",
+  "interpolation": "linear",
+  "x": 900,
+  "y": 340,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "gau000c",
+  "type": "ui-gauge",
+  "z": "tabedge01",
+  "group": "grp000a",
+  "name": "Air quality CO₂ (filtered)",
+  "gtype": "gauge-half",
+  "gstyle": "rounded",
+  "title": "Air quality CO₂ (filtered)",
+  "units": "ppm",
+  "icon": "",
+  "order": 2,
+  "value": "payload",
+  "valueType": "msg",
+  "width": 2,
+  "height": 3,
+  "min": 300,
+  "max": 800,
+  "sizeThickness": 16,
+  "sizeGap": 4,
+  "sizeKeyThickness": 8,
+  "styleRounded": true,
+  "styleGlow": false,
+  "segments": [
+   {
+    "from": "300",
+    "color": "#c98500"
+   },
+   {
+    "from": "600",
+    "color": "#d03b3b"
+   }
+  ],
+  "className": "",
+  "x": 900,
+  "y": 390,
+  "wires": []
+ },
+ {
+  "id": "fn000d",
+  "type": "function",
+  "z": "tabedge01",
+  "name": "route per sensor",
+  "func": "// split raw / filtered messages per sensor -> [chart, gauge] outputs.\n// The chart colours its series by order of first appearance, so every raw point is\n// sent right after the value currently held at the edge output (filtered first).\nconst sensors = [\"temperature\", \"humidity\", \"pressure\", \"co2\"];\nconst parts = msg.topic.split('/');\nconst i = sensors.indexOf(parts[1]);\nif (i < 0 || typeof msg.payload.value !== 'number') return null;\nconst out = new Array(sensors.length * 2).fill(null);\nconst v = Math.round(msg.payload.value * 100) / 100;\nif (parts[2] === 'filtered') {\n    context.set(parts[1], v);\n    out[2 * i + 1] = { payload: v };\n    return out;\n}\nconst held = context.get(parts[1]);\nif (held === undefined) return null;\nout[2 * i] = [{ topic: 'filtered (edge → cloud)', payload: held }, { topic: 'raw (sensor → edge)', payload: v }];\nreturn out;",
+  "outputs": 8,
+  "timeout": 0,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 560,
+  "y": 160,
+  "wires": [
+   [
+    "cht0002"
+   ],
+   [
+    "gau0003"
+   ],
+   [
+    "cht0005"
+   ],
+   [
+    "gau0006"
+   ],
+   [
+    "cht0008"
+   ],
+   [
+    "gau0009"
+   ],
+   [
+    "cht000b"
+   ],
+   [
+    "gau000c"
+   ]
+  ]
+ },
+ {
+  "id": "fn000e",
+  "type": "function",
+  "z": "tabedge01",
+  "name": "decimate raw",
+  "func": "const k = msg.topic;\nconst n = (context.get(k) || 0) + 1;\ncontext.set(k, n);\nreturn n % 2 ? msg : null;",
+  "outputs": 1,
+  "timeout": 0,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 360,
+  "y": 80,
+  "wires": [
+   [
+    "fn000d"
+   ]
+  ]
+ },
+ {
+  "id": "min000f",
+  "type": "mqtt in",
+  "z": "tabedge01",
+  "name": "sensors/+/raw",
+  "topic": "sensors/+/raw",
+  "qos": "0",
+  "datatype": "json",
+  "broker": "brokeredge",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "inputs": 0,
+  "x": 140,
+  "y": 80,
+  "wires": [
+   [
+    "fn000e"
+   ]
+  ]
+ },
+ {
+  "id": "min0010",
+  "type": "mqtt in",
+  "z": "tabedge01",
+  "name": "edge/+/filtered",
+  "topic": "edge/+/filtered",
+  "qos": "0",
+  "datatype": "json",
+  "broker": "brokeredge",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "inputs": 0,
+  "x": 140,
+  "y": 160,
+  "wires": [
+   [
+    "fn000d"
+   ]
+  ]
+ },
+ {
+  "id": "grp0011",
+  "type": "ui-group",
+  "name": "Throughput: before / after the edge filter",
+  "page": "uipage01",
+  "width": "8",
+  "height": "1",
+  "order": 5,
+  "showTitle": true,
+  "className": "",
+  "visible": "true",
+  "disabled": "false",
+  "groupType": "default"
+ },
+ {
+  "id": "cht0012",
+  "type": "ui-chart",
+  "z": "tabedge01",
+  "group": "grp0011",
+  "name": "Bytes per second",
+  "label": "Bytes per second",
+  "order": 1,
+  "chartType": "line",
+  "category": "topic",
+  "categoryType": "msg",
+  "xAxisLabel": "",
+  "xAxisProperty": "",
+  "xAxisPropertyType": "timestamp",
+  "xAxisType": "time",
+  "xAxisFormat": "",
+  "xAxisFormatType": "auto",
+  "yAxisLabel": "B/s",
+  "yAxisProperty": "payload",
+  "yAxisPropertyType": "msg",
+  "ymin": "",
+  "ymax": "",
+  "bins": 10,
+  "action": "append",
+  "stackSeries": false,
+  "pointShape": "false",
+  "pointRadius": 2,
+  "showLegend": true,
+  "removeOlder": "3",
+  "removeOlderUnit": "60",
+  "removeOlderPoints": "300",
+  "colors": [
+   "#3987e5",
+   "#d95926",
+   "#1baf7a",
+   "#eda100",
+   "#e87ba4",
+   "#008300",
+   "#6250d6",
+   "#e34948",
+   "#9085e9"
+  ],
+  "textColor": [
+   "#c3c2b7"
+  ],
+  "textColorDefault": false,
+  "gridColor": [
+   "#2f2f2b"
+  ],
+  "gridColorDefault": false,
+  "width": 8,
+  "height": 4,
+  "className": "",
+  "interpolation": "linear",
+  "x": 900,
+  "y": 440,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "grp0013",
+  "type": "ui-group",
+  "name": "Data reduction",
+  "page": "uipage01",
+  "width": "4",
+  "height": "1",
+  "order": 6,
+  "showTitle": true,
+  "className": "",
+  "visible": "true",
+  "disabled": "false",
+  "groupType": "default"
+ },
+ {
+  "id": "gau0014",
+  "type": "ui-gauge",
+  "z": "tabedge01",
+  "group": "grp0013",
+  "name": "Bandwidth saved",
+  "gtype": "gauge-half",
+  "gstyle": "rounded",
+  "title": "Bandwidth saved",
+  "units": "%",
+  "icon": "",
+  "order": 1,
+  "value": "payload",
+  "valueType": "msg",
+  "width": 4,
+  "height": 3,
+  "min": 0,
+  "max": 100,
+  "sizeThickness": 16,
+  "sizeGap": 4,
+  "sizeKeyThickness": 8,
+  "styleRounded": true,
+  "styleGlow": false,
+  "segments": [
+   {
+    "from": "0",
+    "color": "#199e70"
+   }
+  ],
+  "className": "",
+  "x": 900,
+  "y": 490,
+  "wires": []
+ },
+ {
+  "id": "txt0015",
+  "type": "ui-text",
+  "z": "tabedge01",
+  "group": "grp0013",
+  "order": 2,
+  "width": 4,
+  "height": 1,
+  "name": "Edge filter",
+  "label": "Edge filter",
+  "format": "{{msg.payload}}",
+  "layout": "row-spread",
+  "style": false,
+  "font": "",
+  "fontSize": 16,
+  "color": "#f0efec",
+  "className": "",
+  "x": 900,
+  "y": 540,
+  "wires": []
+ },
+ {
+  "id": "txt0016",
+  "type": "ui-text",
+  "z": "tabedge01",
+  "group": "grp0013",
+  "order": 3,
+  "width": 4,
+  "height": 1,
+  "name": "Raw ingress",
+  "label": "Raw ingress",
+  "format": "{{msg.payload}}",
+  "layout": "row-spread",
+  "style": false,
+  "font": "",
+  "fontSize": 16,
+  "color": "#f0efec",
+  "className": "",
+  "x": 900,
+  "y": 590,
+  "wires": []
+ },
+ {
+  "id": "txt0017",
+  "type": "ui-text",
+  "z": "tabedge01",
+  "group": "grp0013",
+  "order": 4,
+  "width": 4,
+  "height": 1,
+  "name": "Reduced egress",
+  "label": "Reduced egress",
+  "format": "{{msg.payload}}",
+  "layout": "row-spread",
+  "style": false,
+  "font": "",
+  "fontSize": 16,
+  "color": "#f0efec",
+  "className": "",
+  "x": 900,
+  "y": 640,
+  "wires": []
+ },
+ {
+  "id": "fn0018",
+  "type": "function",
+  "z": "tabedge01",
+  "name": "stats",
+  "func": "const s = msg.payload;\nreturn [\n  [{ topic: 'raw in (sensors → edge)', payload: s.in_bytes_s }, { topic: 'reduced out (edge → cloud)', payload: s.out_bytes_s }],\n  { payload: s.reduction_pct },\n  { payload: `${s.mode} · ${s.period}s · window ${s.window}` },\n  { payload: `${s.in_msgs_s} msg/s · ${s.in_bytes_s} B/s` },\n  { payload: `${s.out_msgs_s} msg/s · ${s.out_bytes_s} B/s` },\n];",
+  "outputs": 5,
+  "timeout": 0,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 420,
+  "y": 340,
+  "wires": [
+   [
+    "cht0012"
+   ],
+   [
+    "gau0014"
+   ],
+   [
+    "txt0015"
+   ],
+   [
+    "txt0016"
+   ],
+   [
+    "txt0017"
+   ]
+  ]
+ },
+ {
+  "id": "min0019",
+  "type": "mqtt in",
+  "z": "tabedge01",
+  "name": "edge/stats",
+  "topic": "edge/stats",
+  "qos": "0",
+  "datatype": "json",
+  "broker": "brokeredge",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "inputs": 0,
+  "x": 140,
+  "y": 340,
+  "wires": [
+   [
+    "fn0018"
+   ]
+  ]
+ },
+ {
+  "id": "grp001a",
+  "type": "ui-group",
+  "name": "Raspberry Pi & edge control",
+  "page": "uipage01",
+  "width": "12",
+  "height": "1",
+  "order": 7,
+  "showTitle": true,
+  "className": "",
+  "visible": "true",
+  "disabled": "false",
+  "groupType": "default"
+ },
+ {
+  "id": "gau001b",
+  "type": "ui-gauge",
+  "z": "tabedge01",
+  "group": "grp001a",
+  "name": "CPU",
+  "gtype": "gauge-half",
+  "gstyle": "rounded",
+  "title": "CPU",
+  "units": "%",
+  "icon": "",
+  "order": 1,
+  "value": "payload",
+  "valueType": "msg",
+  "width": 3,
+  "height": 3,
+  "min": 0,
+  "max": 100,
+  "sizeThickness": 16,
+  "sizeGap": 4,
+  "sizeKeyThickness": 8,
+  "styleRounded": true,
+  "styleGlow": false,
+  "segments": [
+   {
+    "from": "0",
+    "color": "#3987e5"
+   },
+   {
+    "from": "85",
+    "color": "#d03b3b"
+   }
+  ],
+  "className": "",
+  "x": 900,
+  "y": 690,
+  "wires": []
+ },
+ {
+  "id": "gau001c",
+  "type": "ui-gauge",
+  "z": "tabedge01",
+  "group": "grp001a",
+  "name": "Memory",
+  "gtype": "gauge-half",
+  "gstyle": "rounded",
+  "title": "Memory",
+  "units": "%",
+  "icon": "",
+  "order": 2,
+  "value": "payload",
+  "valueType": "msg",
+  "width": 3,
+  "height": 3,
+  "min": 0,
+  "max": 100,
+  "sizeThickness": 16,
+  "sizeGap": 4,
+  "sizeKeyThickness": 8,
+  "styleRounded": true,
+  "styleGlow": false,
+  "segments": [
+   {
+    "from": "0",
+    "color": "#d95926"
+   },
+   {
+    "from": "85",
+    "color": "#d03b3b"
+   }
+  ],
+  "className": "",
+  "x": 900,
+  "y": 740,
+  "wires": []
+ },
+ {
+  "id": "fn001d",
+  "type": "function",
+  "z": "tabedge01",
+  "name": "system",
+  "func": "const s = msg.payload;\nreturn [{payload: s.cpu_pct}, {payload: s.mem_used_pct}];",
+  "outputs": 2,
+  "timeout": 0,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 420,
+  "y": 480,
+  "wires": [
+   [
+    "gau001b"
+   ],
+   [
+    "gau001c"
+   ]
+  ]
+ },
+ {
+  "id": "min001e",
+  "type": "mqtt in",
+  "z": "tabedge01",
+  "name": "edge/system",
+  "topic": "edge/system",
+  "qos": "0",
+  "datatype": "json",
+  "broker": "brokeredge",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "inputs": 0,
+  "x": 140,
+  "y": 480,
+  "wires": [
+   [
+    "fn001d"
+   ]
+  ]
+ },
+ {
+  "id": "mout001f",
+  "type": "mqtt out",
+  "z": "tabedge01",
+  "name": "edge/control",
+  "topic": "edge/control",
+  "qos": "0",
+  "retain": "false",
+  "respTopic": "",
+  "contentType": "",
+  "userProps": "",
+  "correl": "",
+  "expiry": "",
+  "broker": "brokeredge",
+  "x": 660,
+  "y": 600,
+  "wires": []
+ },
+ {
+  "id": "fn0020",
+  "type": "function",
+  "z": "tabedge01",
+  "name": "to control JSON",
+  "func": "msg.payload = JSON.stringify({ mode: msg.payload });\nreturn msg;",
+  "outputs": 1,
+  "timeout": 0,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 420,
+  "y": 600,
+  "wires": [
+   [
+    "mout001f"
+   ]
+  ]
+ },
+ {
+  "id": "btn0021",
+  "type": "ui-button-group",
+  "z": "tabedge01",
+  "name": "Edge filter mode",
+  "group": "grp001a",
+  "order": 3,
+  "width": 6,
+  "height": 1,
+  "label": "Edge filter mode",
+  "className": "",
+  "rounded": true,
+  "useThemeColors": true,
+  "passthru": false,
+  "topic": "topic",
+  "topicType": "msg",
+  "options": [
+   {
+    "label": "Moving average",
+    "icon": "",
+    "value": "moving",
+    "valueType": "str",
+    "color": "#3987e5"
+   },
+   {
+    "label": "Sampling (period mean)",
+    "icon": "",
+    "value": "sampling",
+    "valueType": "str",
+    "color": "#3987e5"
+   },
+   {
+    "label": "Pass-through",
+    "icon": "",
+    "value": "passthrough",
+    "valueType": "str",
+    "color": "#3987e5"
+   }
+  ],
+  "x": 160,
+  "y": 600,
+  "wires": [
+   [
+    "fn0020"
+   ]
+  ]
+ },
+ {
+  "id": "ntf0022",
+  "type": "ui-notification",
+  "z": "tabedge01",
+  "ui": "uibase01",
+  "position": "top right",
+  "colorDefault": false,
+  "color": "#d03b3b",
+  "displayTime": "6",
+  "showCountdown": true,
+  "outputs": 1,
+  "allowDismiss": true,
+  "dismissText": "Close",
+  "allowConfirm": false,
+  "confirmText": "Confirm",
+  "raw": false,
+  "className": "",
+  "name": "edge alert",
+  "x": 660,
+  "y": 680,
+  "wires": [
+   []
+  ]
+ },
+ {
+  "id": "fn0023",
+  "type": "function",
+  "z": "tabedge01",
+  "name": "format alert",
+  "func": "const a = msg.payload;\nmsg.payload = `${a.state === 'ALARM' ? '⚠ ALARM' : '✓ back to normal'}: ${a.sensor} = ${a.value} (limit ${a.limit})`;\nreturn msg;",
+  "outputs": 1,
+  "timeout": 0,
+  "noerr": 0,
+  "initialize": "",
+  "finalize": "",
+  "libs": [],
+  "x": 420,
+  "y": 680,
+  "wires": [
+   [
+    "ntf0022"
+   ]
+  ]
+ },
+ {
+  "id": "min0024",
+  "type": "mqtt in",
+  "z": "tabedge01",
+  "name": "edge/alerts",
+  "topic": "edge/alerts",
+  "qos": "0",
+  "datatype": "json",
+  "broker": "brokeredge",
+  "nl": false,
+  "rap": true,
+  "rh": 0,
+  "inputs": 0,
+  "x": 140,
+  "y": 680,
+  "wires": [
+   [
+    "fn0023"
+   ]
+  ]
+ }
+]

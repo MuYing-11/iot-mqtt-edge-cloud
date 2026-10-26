@@ -1,0 +1,6 @@
+# edge = Raspberry Pi gateway (publishes), viewer = dashboards / simulator (read only)
+user edge
+topic readwrite cloud/#
+
+user viewer
+topic read cloud/#

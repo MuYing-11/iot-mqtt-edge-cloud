@@ -1,0 +1,19 @@
+# secrets: broker credentials, EC2 address, SSH private key
+secrets.env
+*.env
+.env.*
+*.pem
+EC2.txt
+
+# course material / large files, not part of the code
+*.mp4
+/*.pdf
+/raspberry_pi_desktop.png
+
+# build / runtime
+node_modules/
+.next/
+__pycache__/
+*.pyc
+.venv/
+state.json

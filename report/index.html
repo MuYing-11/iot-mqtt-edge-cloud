@@ -1,0 +1,766 @@
+<title>Compte rendu IoT TP1–TP2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: lab-report column (≈70ch) with a sticky table of contents on wide screens; figures break out wider than the text. */
+:root {
+  --paper: #f5f7f9;
+  --sheet: #ffffff;
+  --ink: #141a22;
+  --ink-2: #47515e;
+  --rule: #d8dee6;
+  --accent: #0b5cad;
+  --edge: #b4541a;
+  --code-bg: #eef2f6;
+  --good: #1d7a3a;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f1318; --sheet: #161b22; --ink: #e8edf2; --ink-2: #a7b1bd; --rule: #2a323d;
+    --accent: #5aa2ee; --edge: #e58a52; --code-bg: #1c232c; --good: #5cc27b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f1318; --sheet: #161b22; --ink: #e8edf2; --ink-2: #a7b1bd; --rule: #2a323d;
+  --accent: #5aa2ee; --edge: #e58a52; --code-bg: #1c232c; --good: #5cc27b; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 48px;
+}
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.page { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 960px) { .page { grid-template-columns: minmax(0, 1fr); gap: 0; } nav.toc { display: none; } }
+
+/* ---------- cover ---------- */
+header.cover { grid-column: 1 / -1; border-bottom: 1px solid var(--rule); padding-block: 40px 28px; display: grid; gap: 18px; }
+.inst { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; font-size: 13px; color: var(--ink-2); letter-spacing: .02em; }
+.inst b { color: var(--ink); font-weight: 600; }
+.kicker { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .12em; font-size: 13px; color: var(--accent); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5vw, 48px); line-height: 1.08; margin: 0; text-wrap: balance; max-width: 22ch; }
+.meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px 28px; font-size: 14px; }
+.meta-grid div span { display: block; color: var(--ink-2); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+
+/* ---------- toc ---------- */
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; max-height: calc(100vh - 48px); overflow-y: auto; padding-top: 32px; font-size: 13.5px; }
+nav.toc p { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .1em; font-size: 12px; color: var(--ink-2); margin: 0 0 8px; }
+nav.toc ol { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 4px; }
+nav.toc a { color: var(--ink-2); text-decoration: none; display: block; padding: 2px 0 2px 10px; border-left: 2px solid transparent; }
+nav.toc a:hover { color: var(--ink); border-left-color: var(--accent); }
+
+/* ---------- text ---------- */
+main { min-width: 0; padding-top: 24px; }
+section { padding-block: 16px; }
+h2 { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin: 40px 0 6px; line-height: 1.15; text-wrap: balance; }
+h2 .num { color: var(--accent); margin-right: 10px; }
+h3 { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin: 34px 0 6px; text-wrap: balance; }
+h3 .ref { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--ink-2); margin-left: 8px; }
+.part { border-top: 3px solid var(--ink); margin-top: 56px; padding-top: 8px; }
+.part > .kicker { display: block; margin-top: 8px; }
+p, ul, ol.steps { max-width: 72ch; }
+ul, ol.steps { padding-left: 22px; }
+li { margin-block: 3px; }
+code { font-family: var(--font-mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+pre { font-family: var(--font-mono); font-size: 13px; line-height: 1.55; background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px; overflow-x: auto; max-width: 100%; margin: 14px 0; }
+pre code { background: none; padding: 0; font-size: inherit; overflow-wrap: normal; }
+.note { border-left: 3px solid var(--edge); padding: 4px 0 4px 14px; color: var(--ink-2); max-width: 72ch; }
+.note b { color: var(--ink); }
+
+/* ---------- figures ---------- */
+figure { margin: 18px 0 26px; }
+figure a.shot { display: block; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--sheet); }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { font-size: 13.5px; color: var(--ink-2); margin-top: 8px; max-width: 80ch; }
+figcaption b { color: var(--ink); font-family: var(--font-display); font-weight: 600; letter-spacing: .02em; }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+.pair figure { margin: 0; }
+
+/* ---------- tables ---------- */
+.table-wrap { overflow-x: auto; margin: 16px 0 24px; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-family: var(--font-display); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); background: var(--code-bg); }
+tr:last-child td { border-bottom: none; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.best { color: var(--good); font-weight: 600; }
+td code { white-space: nowrap; }
+
+/* ---------- key figures ---------- */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; margin: 18px 0; }
+.kpis div { background: var(--sheet); padding: 14px 16px; }
+.kpis b { display: block; font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpis span { font-size: 13px; color: var(--ink-2); }
+
+/* ---------- architecture diagram ---------- */
+.diagram { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 12px; margin: 18px 0 8px; }
+.diagram svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.diagram .box { fill: var(--code-bg); stroke: var(--rule); stroke-width: 1.5; }
+.diagram .box.hl { stroke: var(--accent); }
+.diagram .t1 { font-family: var(--font-display); font-weight: 700; font-size: 17px; fill: var(--ink); }
+.diagram .t2 { font-family: var(--font-body); font-size: 12.5px; fill: var(--ink-2); }
+.diagram .t3 { font-family: var(--font-mono); font-size: 11.5px; fill: var(--ink-2); }
+.diagram .raw { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.diagram .red { stroke: var(--edge); stroke-width: 2.5; fill: none; }
+.diagram .lbl-raw { font-family: var(--font-mono); font-size: 11.5px; fill: var(--accent); }
+.diagram .lbl-red { font-family: var(--font-mono); font-size: 11.5px; fill: var(--edge); }
+.diagram .ah-raw { fill: var(--accent); }
+.diagram .ah-red { fill: var(--edge); }
+
+footer.end { grid-column: 1 / -1; border-top: 1px solid var(--rule); margin-top: 40px; padding-top: 16px; font-size: 13px; color: var(--ink-2); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+<div class="page">
+
+<header class="cover">
+  <div class="inst"><span><b>INSAT</b> · Université de Carthage · RT5</span><span>Technologies et Protocoles pour l'IoT · Enseignant : Ouni Sofiane</span></div>
+  <span class="kicker">Compte rendu de travaux pratiques</span>
+  <h1>MQTT, Raspberry Pi edge et réduction de données vers le cloud</h1>
+  <div class="meta-grid">
+    <div><span>Groupe</span>El Dabbabi Mouine<br>Lakhder Mohamed Helmi<br>Saddoud Mohamed Amine<br>Bouchaala Oussema</div>
+    <div><span>TP traités</span>TP1 Communication MQTT · TP2 Edge computing et filtrage</div>
+    <div><span>Date</span>22 octobre 2026</div>
+    <div><span>Plateforme</span>PC Windows 11 · VM Raspberry Pi · AWS EC2</div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Sommaire">
+  <p>Sommaire</p>
+  <ol>
+    <li><a href="#archi">Architecture réalisée</a></li>
+  </ol>
+  <p>TP1</p>
+  <ol>
+    <li><a href="#tp1-vm">VM Raspberry Pi</a></li>
+    <li><a href="#tp1-pi">Mosquitto sur la Pi</a></li>
+    <li><a href="#tp1-win">MQTT sous Windows</a></li>
+    <li><a href="#tp1-ws">Analyse Wireshark</a></li>
+    <li><a href="#tp1-pcpi">Échanges PC ↔ Pi</a></li>
+    <li><a href="#tp1-cloud">Broker cloud EC2</a></li>
+  </ol>
+  <p>TP2</p>
+  <ol>
+    <li><a href="#tp2-e1">Étape 1 · génération</a></li>
+    <li><a href="#tp2-e2">Étape 2 · échantillonnage</a></li>
+    <li><a href="#tp2-e3">Étape 3 · moyenne glissante</a></li>
+    <li><a href="#tp2-bilan">Bilan chiffré</a></li>
+  </ol>
+  <p>Travail supplémentaire</p>
+  <ol>
+    <li><a href="#x-gateway">Passerelle edge</a></li>
+    <li><a href="#x-topics">Topics, messages, brokers</a></li>
+    <li><a href="#x-sim">Simulateur PyQt6</a></li>
+    <li><a href="#x-ws-live">Wireshark en direct</a></li>
+    <li><a href="#x-nodered">Dashboard Node-RED</a></li>
+    <li><a href="#x-next">Dashboard cloud Next.js</a></li>
+  </ol>
+  <ol>
+    <li><a href="#difficultes">Difficultés rencontrées</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#annexe">Annexe · fichiers</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- ===================================================== ARCHI -->
+<section id="archi">
+  <h2>Architecture réalisée</h2>
+  <p>Les deux TP ont été réalisés sur une seule maquette qui reprend le schéma de l'énoncé : des capteurs simulés sur le PC publient vers un broker MQTT installé sur le Raspberry Pi (nœud edge). Le Pi filtre et réduit les données, puis les transmet à un broker MQTT dans le cloud. Le rôle de l'IoT Cloud est joué par une instance AWS EC2 qui héberge aussi un tableau de bord web accessible par son adresse IP publique.</p>
+
+  <div class="diagram" role="img" aria-label="Schéma : PC simulateur vers Raspberry Pi edge vers EC2 cloud vers navigateur">
+    <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="mr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-raw" d="M0,0 L10,5 L0,10 z"/></marker>
+        <marker id="mo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah-red" d="M0,0 L10,5 L0,10 z"/></marker>
+      </defs>
+      <rect class="box" x="10" y="60" width="210" height="170" rx="10"/>
+      <text class="t1" x="28" y="92">PC Windows 11</text>
+      <text class="t2" x="28" y="116">Simulateur capteurs PyQt6</text>
+      <text class="t2" x="28" y="136">Scripts TP2 (Python, paho)</text>
+      <text class="t2" x="28" y="156">Mosquitto 2.0.22 (TP1)</text>
+      <text class="t2" x="28" y="176">Wireshark sur VMnet8</text>
+      <text class="t3" x="28" y="210">192.168.174.1</text>
+
+      <rect class="box hl" x="310" y="60" width="230" height="170" rx="10"/>
+      <text class="t1" x="328" y="92">Raspberry Pi (VM)</text>
+      <text class="t2" x="328" y="116">Mosquitto 2.0.11 — broker edge</text>
+      <text class="t2" x="328" y="136">Filtrage / réduction (Python)</text>
+      <text class="t2" x="328" y="156">Node-RED 4 + Dashboard 2.0</text>
+      <text class="t2" x="328" y="176">Détection de seuils</text>
+      <text class="t3" x="328" y="210">192.168.174.133 · :1883 · :1880</text>
+
+      <rect class="box" x="630" y="60" width="200" height="170" rx="10"/>
+      <text class="t1" x="648" y="92">AWS EC2</text>
+      <text class="t2" x="648" y="116">Ubuntu 26.04 LTS</text>
+      <text class="t2" x="648" y="136">Mosquitto (auth + ACL)</text>
+      <text class="t2" x="648" y="156">Next.js derrière nginx</text>
+      <text class="t3" x="648" y="210">13.60.75.46 · :1883 · :80</text>
+
+      <rect class="box" x="890" y="105" width="100" height="80" rx="10"/>
+      <text class="t1" x="905" y="138">Client</text>
+      <text class="t2" x="905" y="160">navigateur</text>
+
+      <path class="raw" d="M220 120 H305" marker-end="url(#mr)"/>
+      <text class="lbl-raw" x="226" y="108">sensors/+/raw</text>
+      <text class="lbl-raw" x="226" y="140">≈ 40 msg/s</text>
+
+      <path class="red" d="M540 120 H625" marker-end="url(#mo)"/>
+      <text class="lbl-red" x="550" y="108">cloud/+</text>
+      <text class="lbl-red" x="550" y="140">≈ 4 msg/s</text>
+
+      <path class="red" d="M830 145 H885" marker-end="url(#mo)"/>
+      <text class="lbl-red" x="834" y="135">HTTP</text>
+
+      <path class="raw" d="M425 230 V262 H115 V235" marker-end="url(#mr)"/>
+      <text class="lbl-raw" x="150" y="284">edge/+/filtered, edge/stats → retour vers le simulateur (visualisation)</text>
+    </svg>
+  </div>
+  <p class="note">Bleu : données brutes des capteurs (réseau local). Orange : données réduites par l'edge (Internet). Le PC voit les deux sauts sur l'interface VMware VMnet8, ce qui permet de mesurer le gain de bande passante avec un seul Wireshark, comme le demande le TP2.</p>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Élément</th><th>Rôle</th><th>Adresse</th><th>Logiciels</th></tr></thead>
+    <tbody>
+      <tr><td>PC hôte</td><td>Capteurs simulés, broker local (TP1), analyse</td><td><code>192.168.174.1</code></td><td>Python 3.12, paho-mqtt 2.1, PyQt6, Mosquitto 2.0.22, Wireshark 4.6.9</td></tr>
+      <tr><td>Raspberry Pi (VMware)</td><td>Nœud edge : broker, filtrage, dashboard local</td><td><code>192.168.174.133</code></td><td>Raspberry Pi Desktop (Debian 11 i386), Mosquitto 2.0.11, paho 1.5.1, Node.js 20, Node-RED 4</td></tr>
+      <tr><td>EC2 (eu-north-1)</td><td>IoT Cloud : broker + dashboard web</td><td><code>13.60.75.46</code></td><td>Ubuntu 26.04, Mosquitto 2.0.22, Node.js 22, Next.js 15, nginx 1.28</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ===================================================== TP1 -->
+<div class="part" id="tp1">
+  <span class="kicker">TP1</span>
+  <h2 style="margin-top:4px">Communication MQTT et Raspberry Pi</h2>
+</div>
+
+<section id="tp1-vm">
+  <h3>Raspberry Pi comme nœud edge et image virtuelle <span class="ref">§I–III</span></h3>
+  <p>Le Raspberry Pi joue le rôle de passerelle intelligente entre les objets et le cloud. Les capteurs (DHT, MQ135) publient localement en MQTT vers le broker Mosquitto du Pi. Le Pi agrège, filtre, détecte des événements et ne transmet au cloud que les informations utiles. On combine ainsi la faible latence et le fonctionnement local de l'edge avec le stockage et l'analyse à long terme du cloud.</p>
+  <p>Faute de carte physique, l'image <code>2022-07-01-raspios-bullseye-i386</code> (Raspberry Pi Desktop pour PC) a été installée dans une machine virtuelle VMware Workstation : 4 Go de RAM, 2 vCPU, disque de 20 Go et réseau NAT (VMnet8). La VM se comporte comme un Pi réel pour tout le logiciel (Mosquitto, Python, Node-RED). Seuls les GPIO, SPI, I2C et la caméra manquent, ce qui n'a aucun effet ici puisque les capteurs sont simulés.</p>
+  <figure>
+    <a class="shot" href="img/tp1_pi_mosquitto_status.png" target="_blank" rel="noopener"><img src="img/tp1_pi_mosquitto_status.png" alt="Terminal du Raspberry Pi montrant la version de Mosquitto, le service actif et le port 1883 en écoute" loading="lazy"></a>
+    <figcaption><b>Fig. 1</b> — Bureau de la VM Raspberry Pi. Mosquitto 2.0.11 est installé (<code>apt install mosquitto mosquitto-clients</code>), le service est actif et écoute sur <code>0.0.0.0:1883</code> grâce au fichier <code>/etc/mosquitto/conf.d/edge-lan.conf</code>. paho-mqtt 1.5.1 est disponible pour Python.</figcaption>
+  </figure>
+</section>
+
+<section id="tp1-pi">
+  <h3>Mosquitto et Python sur le Raspberry Pi <span class="ref">§III.5–7 · §V.1–3</span></h3>
+  <p>Mosquitto 2 n'écoute par défaut que sur <code>localhost</code>. Pour que les capteurs du réseau puissent publier, on ajoute un listener sur toutes les interfaces :</p>
+<pre><code># /etc/mosquitto/conf.d/edge-lan.conf
+listener 1883 0.0.0.0
+allow_anonymous true</code></pre>
+  <p>Test de l'énoncé : un abonné sur <code>iot/temp</code> dans un terminal, un publieur dans un second. Les trois messages publiés, dont un JSON, arrivent immédiatement chez l'abonné.</p>
+  <figure>
+    <a class="shot" href="img/tp1_pi_sub_pub.png" target="_blank" rel="noopener"><img src="img/tp1_pi_sub_pub.png" alt="Deux terminaux sur le Pi : mosquitto_sub reçoit les valeurs publiées par mosquitto_pub" loading="lazy"></a>
+    <figcaption><b>Fig. 2</b> — Terminal 1 : <code>mosquitto_sub -h localhost -t "iot/temp" -v</code>. Terminal 2 : <code>mosquitto_pub</code> de 25, 26.5 et d'un objet JSON. Le résultat attendu (« 25 ») est obtenu.</figcaption>
+  </figure>
+  <p>Même chose en Python avec paho-mqtt : l'exemple <code>publish.single()</code> de l'énoncé, puis un client publieur (<code>on_publish</code>, ampoule <code>house/bulb1</code> et températures) et un client abonné (<code>on_connect</code> / <code>on_message</code>, <code>loop_forever()</code>).</p>
+  <figure>
+    <a class="shot" href="img/tp1_pi_python.png" target="_blank" rel="noopener"><img src="img/tp1_pi_python.png" alt="Abonné et publieurs Python paho sur le Raspberry Pi" loading="lazy"></a>
+    <figcaption><b>Fig. 3</b> — <code>tp1/mqtt_subscriber.py</code> reçoit le message de <code>single_publish.py</code> puis les publications de <code>mqtt_publisher.py</code> (callback <code>on_publish</code> : « data published (mid=n) »).</figcaption>
+  </figure>
+<pre><code># tp1/mqtt_subscriber.py (extrait) — compatible paho 1.x (Pi) et 2.x (PC)
+def on_connect(client, userdata, flags, rc, properties=None):
+    print("Connected with result code " + str(rc))
+    for t in topics:
+        client.subscribe(t)
+
+def on_message(client, userdata, msg):
+    print(msg.topic + " " + msg.payload.decode())
+
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2) if hasattr(mqtt, "CallbackAPIVersion") else mqtt.Client()
+client.on_connect, client.on_message = on_connect, on_message
+client.connect(broker, 1883, 60)
+client.loop_forever()</code></pre>
+</section>
+
+<section id="tp1-win">
+  <h3>MQTT sous Windows <span class="ref">§IV</span></h3>
+  <p>Le broker Mosquitto 2.0.22 a été installé sur le PC et lancé en mode verbeux avec un listener sur toutes les interfaces (fichier <code>tp1/mosquitto-windows.conf</code>). La commande de l'énoncé confirme l'écoute sur le port 1883.</p>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/tp1_win_netstat.png" target="_blank" rel="noopener"><img src="img/tp1_win_netstat.png" alt="netstat montre le port 1883 en écoute" loading="lazy"></a>
+      <figcaption><b>Fig. 4</b> — <code>netstat -an | findstr 1883</code> : <code>TCP 0.0.0.0:1883 LISTENING</code>.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/tp1_win_broker.png" target="_blank" rel="noopener"><img src="img/tp1_win_broker.png" alt="Journal du broker Mosquitto Windows" loading="lazy"></a>
+      <figcaption><b>Fig. 5</b> — Journal du broker (<code>mosquitto -v</code>) : réception des PUBLISH du client <code>control1</code> et relais vers les deux abonnés.</figcaption>
+    </figure>
+  </div>
+  <p>Publication et abonnement en ligne de commande, avec l'option <code>-d</code> qui affiche les paquets MQTT échangés (CONNECT, CONNACK, SUBSCRIBE, SUBACK, PUBLISH) :</p>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/tp1_win_sub_debug.png" target="_blank" rel="noopener"><img src="img/tp1_win_sub_debug.png" alt="mosquitto_sub en mode debug sur sensors/drone01/altitude" loading="lazy"></a>
+      <figcaption><b>Fig. 6</b> — <code>mosquitto_sub -V mqttv311 -t sensors/drone01/altitude -d</code> : séquence CONNECT → CONNACK(0) → SUBSCRIBE → SUBACK, puis réception de 120.5.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/tp1_win_pub.png" target="_blank" rel="noopener"><img src="img/tp1_win_pub.png" alt="mosquitto_pub en mode debug" loading="lazy"></a>
+      <figcaption><b>Fig. 7</b> — <code>mosquitto_pub -h localhost -t topicName -m "message" -d</code> sur trois topics.</figcaption>
+    </figure>
+  </div>
+  <figure>
+    <a class="shot" href="img/tp1_win_sub_wildcard.png" target="_blank" rel="noopener"><img src="img/tp1_win_sub_wildcard.png" alt="Abonnement avec jokers" loading="lazy"></a>
+    <figcaption><b>Fig. 8</b> — Joker de niveau unique : <code>sensors/machines/+/temperature/+</code> reçoit <code>m1/temperature/celsius</code>, <code>m2/temperature/fahrenheit</code> et <code>control1/temperature/celsius</code>, mais pas <code>sensors/drone01/altitude</code>.</figcaption>
+  </figure>
+  <p>Application Python (paho) qui publie et reçoit via le broker du PC :</p>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/tp1_win_py_pub.png" target="_blank" rel="noopener"><img src="img/tp1_win_py_pub.png" alt="Publieur Python sous Windows" loading="lazy"></a>
+      <figcaption><b>Fig. 9</b> — Publieur <code>mqtt_publisher.py localhost control1 5</code>.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/tp1_win_py_sub.png" target="_blank" rel="noopener"><img src="img/tp1_win_py_sub.png" alt="Abonné Python sous Windows" loading="lazy"></a>
+      <figcaption><b>Fig. 10</b> — Abonné Python sur <code>house/#</code>, <code>sensors/#</code> et <code>$SYS/broker/clients/connected</code>. Le topic système montre l'évolution du nombre de clients connectés (2 → 4 → 3).</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="tp1-ws">
+  <h3>Analyse Wireshark des paquets MQTT</h3>
+  <p>Capture sur l'interface loopback (<code>\Device\NPF_Loopback</code>, filtre <code>tcp port 1883</code>) pendant les échanges ci-dessus, affichée avec le filtre <code>mqtt</code>.</p>
+  <figure>
+    <a class="shot" href="img/ws_tp1_loopback_subscribe.png" target="_blank" rel="noopener"><img src="img/ws_tp1_loopback_subscribe.png" alt="Wireshark : Subscribe Request avec deux topics" loading="lazy"></a>
+    <figcaption><b>Fig. 11</b> — Trame 28, <i>Subscribe Request</i> : en-tête fixe <code>0x82</code> (type 8 = SUBSCRIBE, bits réservés 0010), identifiant de message 1, deux filtres de topic avec leur QoS demandée (0).</figcaption>
+  </figure>
+  <figure>
+    <a class="shot" href="img/ws_tp1_loopback_publish.png" target="_blank" rel="noopener"><img src="img/ws_tp1_loopback_publish.png" alt="Wireshark : Publish Message" loading="lazy"></a>
+    <figcaption><b>Fig. 12</b> — Trame 43, <i>Publish Message</i> : en-tête <code>0x30</code> (type 3 = PUBLISH, QoS 0, pas de DUP ni de RETAIN), longueur du topic, topic <code>sensors/drone01/altitude</code> puis la charge utile <code>120.5</code>. En QoS 0 il n'y a ni identifiant ni acquittement : c'est le mode « fire and forget ».</figcaption>
+  </figure>
+  <p>On observe la légèreté du protocole : un PUBLISH tient en 2 octets d'en-tête fixe, plus le topic et la charge utile. Le CONNACK fait 4 octets et un PINGREQ 2 octets. Sur ces petits messages, l'essentiel de la trame vient des en-têtes TCP/IP (52 à 66 octets), et c'est précisément ce que la réduction à l'edge économise au TP2.</p>
+</section>
+
+<section id="tp1-pcpi">
+  <h3>Échanges entre le PC et le Raspberry Pi <span class="ref">§V.2–5</span></h3>
+  <p><b>PC → broker du Pi.</b> Comme sur la figure de l'énoncé, le PC publie <code>"Hello MQTT"</code> vers le broker du Pi et un abonné <code>#</code> sur le Pi le reçoit. Le message retenu <code>edge/config</code> apparaît aussi : il vient de la passerelle edge décrite plus loin.</p>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/tp1_win_pub_to_pi.png" target="_blank" rel="noopener"><img src="img/tp1_win_pub_to_pi.png" alt="Le PC publie vers le broker du Pi" loading="lazy"></a>
+      <figcaption><b>Fig. 13</b> — <code>mosquitto_pub -h 192.168.174.133 -t test -m "Hello MQTT" -d</code> depuis Windows.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/tp1_pi_pc_exchange.png" target="_blank" rel="noopener"><img src="img/tp1_pi_pc_exchange.png" alt="Le Pi reçoit Hello MQTT et publie vers le broker du PC" loading="lazy"></a>
+      <figcaption><b>Fig. 14</b> — En haut : le Pi reçoit <code>test Hello MQTT</code> et <code>house/bulb1 on</code>. En bas : le Pi publie vers le broker du PC (<code>192.168.174.1</code>).</figcaption>
+    </figure>
+  </div>
+  <p><b>Broker du PC comme module principal (§V.4).</b> Le script Python du Pi publie vers le broker Windows. Le broker journalise la connexion du client <code>raspberry-pi</code> venant de <code>192.168.174.133</code>, et un abonné Windows reçoit les données.</p>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/tp1_win_broker_pi.png" target="_blank" rel="noopener"><img src="img/tp1_win_broker_pi.png" alt="Journal du broker Windows : connexion du client raspberry-pi" loading="lazy"></a>
+      <figcaption><b>Fig. 15</b> — <code>New client connected from 192.168.174.133 as raspberry-pi</code>, puis les PUBLISH relayés.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/tp1_win_sub_from_pi.png" target="_blank" rel="noopener"><img src="img/tp1_win_sub_from_pi.png" alt="Abonné Windows recevant les données du Pi" loading="lazy"></a>
+      <figcaption><b>Fig. 16</b> — <code>mosquitto_sub -h localhost -t sensors/machines/# -t house/# -v</code> sur le PC.</figcaption>
+    </figure>
+  </div>
+  <figure>
+    <a class="shot" href="img/ws_tp1_pi_to_pc.png" target="_blank" rel="noopener"><img src="img/ws_tp1_pi_to_pc.png" alt="Wireshark : échanges MQTT entre le PC et le Pi sur VMnet8" loading="lazy"></a>
+    <figcaption><b>Fig. 17</b> — Capture sur VMnet8 : d'abord la session PC → Pi (Connect, Publish <code>test</code>, Disconnect), puis la session Pi → PC (Connect, quatre Publish, Disconnect). Le PUBLISH sélectionné porte le topic de 49 octets <code>sensors/machines/raspberry-pi/temperature/celsius</code>.</figcaption>
+  </figure>
+  <p class="note"><b>§V.5, M2M entre deux Raspberry Pi :</b> non réalisé, faute d'un second Pi. Le principe est le même que ci-dessus : un Pi héberge le broker, l'autre Pi se connecte comme client à son adresse et publie ou s'abonne. Les deux dialoguent sans passer par le cloud.</p>
+</section>
+
+<section id="tp1-cloud">
+  <h3>Broker IoT Cloud sur AWS EC2 <span class="ref">§III.8</span></h3>
+  <p>À la place d'AWS IoT Core, l'IoT Cloud est un broker Mosquitto installé sur une instance EC2 (Ubuntu 26.04, eu-north-1). Il est exposé sur Internet, donc l'accès anonyme est interdit. Deux comptes protégés par mot de passe et une ACL séparent les rôles :</p>
+<pre><code># /etc/mosquitto/conf.d/cloud.conf          # /etc/mosquitto/acl
+listener 1883 0.0.0.0                      user edge        # passerelle Raspberry Pi
+allow_anonymous false                      topic readwrite cloud/#
+password_file /etc/mosquitto/passwd
+acl_file /etc/mosquitto/acl                user viewer      # dashboards, simulateur
+                                           topic read cloud/#</code></pre>
+  <p>Le groupe de sécurité EC2 n'ouvre que les ports 22 (SSH), 80 (dashboard) et 1883 (MQTT). Les mots de passe sont générés aléatoirement et stockés hors du code (<code>cloud/secrets.env</code>, fichier <code>.env.mqtt</code> du dashboard).</p>
+  <figure>
+    <a class="shot" href="img/cloud_ec2_broker.png" target="_blank" rel="noopener"><img src="img/cloud_ec2_broker.png" alt="Terminal SSH sur l'EC2 : services actifs, configuration, réception des messages cloud" loading="lazy"></a>
+    <figcaption><b>Fig. 18</b> — Session SSH sur l'EC2 : services <code>mosquitto</code>, <code>nginx</code> et <code>iot-dashboard</code> actifs, ports en écoute, réception des messages <code>cloud/#</code> envoyés par le Pi. Un client anonyme est refusé (<code>not authorised</code>, code 5).</figcaption>
+  </figure>
+</section>
+
+<!-- ===================================================== TP2 -->
+<div class="part" id="tp2">
+  <span class="kicker">TP2</span>
+  <h2 style="margin-top:4px">Edge computing et filtrage de données pour l'IIoT</h2>
+</div>
+<p>La maquette du TP2 est celle de la figure d'architecture : le PC génère les données d'un capteur et les publie vers le broker edge du Pi. Une application sur le Pi les réduit et publie le résultat vers le broker cloud (EC2). Wireshark sur le PC, interface VMnet8, mesure les deux débits. Toutes les captures sont faites avec le filtre de capture <code>tcp port 1883</code>.</p>
+
+<section id="tp2-e1">
+  <h3>Étape 1 · génération de trafic capteur et publication vers l'edge</h3>
+  <p><b>1.1 Génération du dataset.</b> Le code C# de bitperfect.at a été porté en Python (<code>tp2/sensor_sim.py</code>). Chaque valeur s'écarte de la précédente d'un pas aléatoire inférieur à σ/10. La probabilité de continuer dans la même direction diminue quand on s'éloigne de la moyenne, ce qui donne une courbe continue et réaliste autour de μ.</p>
+<pre><code>class Simulator:
+    def __init__(self, seed, mean, standard_deviation):
+        self._random = random.Random(seed)
+        self._mean, self._standard_deviation = mean, abs(standard_deviation)
+        self._step_size_factor = self._standard_deviation / 10
+        self._value = self._mean - self._random.random()
+
+    def calculate_next_value(self):
+        value_change = self._random.random() * self._step_size_factor
+        factor = (-1, 1)[self._decide_factor()]
+        self._value += value_change * factor
+        return self._value
+
+    def _decide_factor(self):
+        if self._value > self._mean:
+            distance, continue_direction, change_direction = self._value - self._mean, 1, 0
+        else:
+            distance, continue_direction, change_direction = self._mean - self._value, 0, 1
+        chance = (self._standard_deviation / 2) - (distance / 50)
+        random_value = self._random.random() * self._standard_deviation
+        return continue_direction if random_value &lt; chance else change_direction</code></pre>
+  <figure>
+    <a class="shot" href="img/tp2_step1_1_dataset.png" target="_blank" rel="noopener"><img src="img/tp2_step1_1_dataset.png" alt="Courbe de 5000 valeurs simulées autour de 20 °C" loading="lazy"></a>
+    <figcaption><b>Fig. 19</b> — 5 000 valeurs (seed 12345, μ = 20, σ = 5) affichées avec matplotlib : min 7.82, max 29.03, moyenne 19.84 °C. L'allure est celle de la figure de l'énoncé.</figcaption>
+  </figure>
+
+  <p><b>1.2 Publication périodique.</b> <code>step1_2_periodic_pub.py</code> publie une valeur toutes les 100 ms (10 msg/s) sur <code>sensors/temperature/raw</code>, au format JSON <code>{"seq", "ts", "value"}</code>. La réception est vérifiée sur le Pi avec <code>mosquitto_sub</code>.</p>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/tp2_step1_2_pc_pub.png" target="_blank" rel="noopener"><img src="img/tp2_step1_2_pc_pub.png" alt="Console du PC publiant périodiquement" loading="lazy"></a>
+      <figcaption><b>Fig. 20</b> — PC : publications espacées de 0,1 s.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/tp2_step1_2_pi_sub.png" target="_blank" rel="noopener"><img src="img/tp2_step1_2_pi_sub.png" alt="Le Pi reçoit les messages du capteur" loading="lazy"></a>
+      <figcaption><b>Fig. 21</b> — Pi : <code>mosquitto_sub -t sensors/temperature/raw -v</code>, numéros de séquence continus.</figcaption>
+    </figure>
+  </div>
+  <p><b>1.3 Débit dans Wireshark.</b> Graphe <i>Statistics › I/O Graphs</i> (intervalle 1 s, axe en octets, filtre <code>mqtt.msgtype==3 &amp;&amp; ip.dst==192.168.174.133</code>). Le débit est un plateau quasi constant d'environ 1,27 ko/s.</p>
+  <figure>
+    <a class="shot" href="img/ws_io_tp2_step1_2_periodic.png" target="_blank" rel="noopener"><img src="img/ws_io_tp2_step1_2_periodic.png" alt="I/O graph : débit constant pour la publication périodique" loading="lazy"></a>
+    <figcaption><b>Fig. 22</b> — Publication périodique : 300 PUBLISH, 39 433 octets en 31 s. Chaque trame fait 130 octets pour environ 50 octets de JSON.</figcaption>
+  </figure>
+
+  <p><b>1.4 Publication poissonnienne.</b> Les instants de publication suivent un processus de Poisson de paramètre λ = 10 msg/s. Les intervalles sont tirés selon une loi exponentielle avec le code fourni, <code>-math.log(1.0 - n) / l</code>, adapté pour envoyer les valeurs du dataset.</p>
+<pre><code>def next_time_interval(l):
+    n = random.random() * 1.0
+    inter_event_time = -math.log(1.0 - n) / l
+    return inter_event_time
+
+for i, value in enumerate(dataset):
+    tt = next_time_interval(l)
+    time.sleep(tt)
+    client.publish("sensors/temperature/raw",
+                   json.dumps({"seq": i, "ts": round(time.time(), 3), "value": round(value, 3)}))</code></pre>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/tp2_step1_4_pc_pub.png" target="_blank" rel="noopener"><img src="img/tp2_step1_4_pc_pub.png" alt="Console Poisson : intervalles variables" loading="lazy"></a>
+      <figcaption><b>Fig. 23</b> — Intervalles dt aléatoires (de 0 à plus de 250 ms) autour de 100 ms en moyenne.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/tp2_step1_4_pi_sub.png" target="_blank" rel="noopener"><img src="img/tp2_step1_4_pi_sub.png" alt="Pi recevant les publications poissonniennes" loading="lazy"></a>
+      <figcaption><b>Fig. 24</b> — Réception sur le Pi : les horodatages ne sont plus régulièrement espacés.</figcaption>
+    </figure>
+  </div>
+  <p><b>1.5 Comparaison.</b> Pour le même nombre de messages et le même débit moyen, l'arrivée poissonnienne fait fluctuer fortement le débit instantané, ce qui est plus réaliste pour un parc de capteurs.</p>
+  <figure>
+    <a class="shot" href="img/ws_io_tp2_step1_4_poisson.png" target="_blank" rel="noopener"><img src="img/ws_io_tp2_step1_4_poisson.png" alt="I/O graph : débit irrégulier pour la publication poissonnienne" loading="lazy"></a>
+    <figcaption><b>Fig. 25</b> — Publication poissonnienne : débit de 4 à 18 messages par seconde (500 o/s à 2,4 ko/s).</figcaption>
+  </figure>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Capture (30 s, 300 msg)</th><th class="n">PUBLISH</th><th class="n">Octets</th><th class="n">msg/s moyen</th><th class="n">Écart-type msg/s</th><th class="n">Min–max msg/s</th><th class="n">o/s moyen</th></tr></thead>
+    <tbody>
+      <tr><td>Périodique (T = 100 ms)</td><td class="n">300</td><td class="n">39 433</td><td class="n">9,7</td><td class="n">1,4*</td><td class="n">10–10</td><td class="n">1 272</td></tr>
+      <tr><td>Poisson (λ = 10)</td><td class="n">300</td><td class="n">39 431</td><td class="n">10,0</td><td class="n">3,4</td><td class="n">4–18</td><td class="n">1 314</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">* L'écart-type du cas périodique vient uniquement de la première seconde, partiellement capturée (2 messages). Sur toutes les autres secondes, on compte exactement 10 messages.</p>
+</section>
+
+<section id="tp2-e2">
+  <h3>Étape 2 · réduction par échantillonnage et publication vers le cloud</h3>
+  <p><b>2.1</b> <code>step2_edge_sampling.py</code> tourne sur le Pi. Il s'abonne au topic brut sur le broker local, ajoute chaque valeur à une liste et, toutes les 2 s, publie la moyenne de la liste vers le broker de l'EC2 (<code>cloud/temperature</code>, compte <code>edge</code>), puis vide la liste.</p>
+<pre><code>def on_message(client, userdata, msg):
+    with lock:
+        buffer.append(json.loads(msg.payload)["value"])
+
+while True:
+    time.sleep(PERIOD)
+    with lock:
+        samples = buffer[:]
+        buffer.clear()
+    if samples:
+        avg = sum(samples) / len(samples)
+        cloud.publish("cloud/temperature", json.dumps({"ts": time.time(), "value": round(avg, 3),
+                                                       "n": len(samples), "method": "sampling"}))</code></pre>
+  <figure>
+    <a class="shot" href="img/tp2_step2_pi_edge.png" target="_blank" rel="noopener"><img src="img/tp2_step2_pi_edge.png" alt="Application d'échantillonnage sur le Pi" loading="lazy"></a>
+    <figcaption><b>Fig. 26</b> — Sur le Pi, chaque ligne « n raw msgs → 1 msg » montre 11 à 25 messages bruts fusionnés en un seul message cloud. Le nombre varie à cause des arrivées poissonniennes.</figcaption>
+  </figure>
+  <p><b>2.2 Débit reçu par le cloud.</b> Le graphe I/O superpose le trafic brut (PC → Pi, bleu) et le trafic réduit (Pi → EC2, orange) pendant 63 s de publication poissonnienne à λ = 10.</p>
+  <figure>
+    <a class="shot" href="img/ws_io_tp2_step2_sampling.png" target="_blank" rel="noopener"><img src="img/ws_io_tp2_step2_sampling.png" alt="I/O graph brut contre réduit, étape 2" loading="lazy"></a>
+    <figcaption><b>Fig. 27</b> — Brut : 1 182 o/s en moyenne. Réduit : une trame de 144 octets toutes les 2 s, soit 71 o/s. Le gain sur le lien montant vers le cloud est de <b>94,0 %</b>.</figcaption>
+  </figure>
+  <figure>
+    <a class="shot" href="img/ws_tp2_step2_publish_cloud.png" target="_blank" rel="noopener"><img src="img/ws_tp2_step2_publish_cloud.png" alt="Wireshark : PUBLISH cloud/temperature vers 13.60.75.46" loading="lazy"></a>
+    <figcaption><b>Fig. 28</b> — Le PUBLISH réduit (trame 60) part du Pi vers <code>13.60.75.46:1883</code> au milieu du flux brut. Les PUBLISH Pi → PC visibles sont ceux relayés à l'outil de comparaison de l'étape 3.1, abonné au topic brut.</figcaption>
+  </figure>
+</section>
+
+<section id="tp2-e3">
+  <h3>Étape 3 · filtrage par moyenne glissante</h3>
+  <p><b>3.1 Lecture côté cloud.</b> <code>step3_cloud_viewer.py</code> s'abonne en même temps au topic brut (broker edge) et au topic réduit (broker EC2, compte <code>viewer</code>), puis trace les deux courbes. Avec la moyenne par période, la courbe cloud suit la tendance mais en retard et en escalier. Chaque point représente la fenêtre [t − 2 s, t] et il est daté de la fin de la période. Le nombre d'échantillons par fenêtre varie de 11 à 25, ce qui ajoute du bruit.</p>
+  <figure>
+    <a class="shot" href="img/tp2_step2_sampling_vs_raw.png" target="_blank" rel="noopener"><img src="img/tp2_step2_sampling_vs_raw.png" alt="Courbe brute et courbe cloud par échantillonnage" loading="lazy"></a>
+    <figcaption><b>Fig. 29</b> — Étape 2 : capteur (bleu, 521 messages) et cloud (orange, 29 messages). Le retard est visible à chaque changement de pente, par exemple vers 28 s et 44 s.</figcaption>
+  </figure>
+  <p><b>3.2 Moyenne glissante.</b> Le calcul est remplacé par une fenêtre glissante des 30 derniers échantillons, qui chevauche les périodes successives. La valeur est datée du centre de la fenêtre (<code>ts_center</code>, moyenne des horodatages des échantillons). On obtient ainsi la moyenne centrée de l'énoncé, x̄ᵢ = 1/(2M+1) · Σ<sub>j=−M..M</sub> x[i+j], livrée avec une latence d'une demi-fenêtre (environ 2,5 s ici).</p>
+<pre><code>window = collections.deque(maxlen=WINDOW)          # 30 derniers échantillons (ts, valeur)
+
+def on_message(client, userdata, msg):
+    m = json.loads(msg.payload)
+    with lock:
+        window.append((m.get("ts", time.time()), m["value"]))
+
+while True:
+    time.sleep(PERIOD)                              # toujours 1 message / 2 s vers le cloud
+    with lock:
+        window_average = round(sum(v for _, v in window) / len(window), 3)
+        ts_center = round(sum(t for t, _ in window) / len(window), 3)
+    cloud.publish("cloud/temperature", json.dumps({"ts": time.time(), "value": window_average,
+                                                   "ts_center": ts_center, "window": len(window)}))</code></pre>
+  <figure>
+    <a class="shot" href="img/tp2_step3_pi_edge.png" target="_blank" rel="noopener"><img src="img/tp2_step3_pi_edge.png" alt="Application moyenne glissante sur le Pi" loading="lazy"></a>
+    <figcaption><b>Fig. 30</b> — Sur le Pi, la fenêtre se remplit (15 puis 30 échantillons) et un message part toutes les 2 s avec <code>ts_center</code>.</figcaption>
+  </figure>
+  <p><b>3.3 Concordance des courbes.</b> La courbe réduite suit maintenant la courbe du capteur, sans décalage, comme sur la figure « Melbourne » de l'énoncé. La même opération faite hors ligne sur tout le dataset (fenêtre centrée, M = 25) donne la figure 32.</p>
+  <figure>
+    <a class="shot" href="img/tp2_step3_moving_vs_raw.png" target="_blank" rel="noopener"><img src="img/tp2_step3_moving_vs_raw.png" alt="Courbe brute et courbe cloud par moyenne glissante centrée" loading="lazy"></a>
+    <figcaption><b>Fig. 31</b> — Étape 3 : capteur (569 messages) et cloud (29 messages) avec la moyenne glissante centrée.</figcaption>
+  </figure>
+  <figure>
+    <a class="shot" href="img/tp2_step3_3_offline_ma.png" target="_blank" rel="noopener"><img src="img/tp2_step3_3_offline_ma.png" alt="Dataset complet et sa moyenne glissante" loading="lazy"></a>
+    <figcaption><b>Fig. 32</b> — Moyenne glissante centrée (<code>np.convolve</code>, fenêtre 2M+1 = 51) sur les 5 000 valeurs : le lissage conserve la tendance et supprime le bruit de mesure.</figcaption>
+  </figure>
+  <figure>
+    <a class="shot" href="img/ws_io_tp2_step3_moving_avg.png" target="_blank" rel="noopener"><img src="img/ws_io_tp2_step3_moving_avg.png" alt="I/O graph brut contre réduit, étape 3" loading="lazy"></a>
+    <figcaption><b>Fig. 33</b> — Le débit vers le cloud reste d'un message toutes les 2 s (96 o/s, le JSON contient un champ de plus). Le filtre améliore la qualité sans coût en bande passante.</figcaption>
+  </figure>
+</section>
+
+<section id="tp2-bilan">
+  <h3>Bilan chiffré</h3>
+  <p>Mesures relevées dans Wireshark (trames PUBLISH complètes, en-têtes Ethernet/IP/TCP compris) et précision calculée par <code>tp2/step3_3_analysis.py</code>. La référence est la moyenne des valeurs brutes sur ±1,5 s autour de l'instant de chaque point cloud. La gigue est l'écart-type des différences entre points cloud successifs.</p>
+  <div class="kpis">
+    <div><b>94,0 %</b><span>octets économisés, échantillonnage</span></div>
+    <div><b>92,1 %</b><span>octets économisés, moyenne glissante</span></div>
+    <div><b>0,14 °C</b><span>RMSE de la moyenne glissante centrée</span></div>
+    <div><b>≈ 20 → 1</b><span>messages fusionnés par envoi cloud</span></div>
+  </div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Méthode à l'edge</th><th class="n">PUBLISH brut</th><th class="n">Octets brut</th><th class="n">PUBLISH cloud</th><th class="n">Octets cloud</th><th class="n">Gain octets</th><th class="n">RMSE (°C)</th><th class="n">Gigue (°C)</th></tr></thead>
+    <tbody>
+      <tr><td>Échantillonnage, daté fin de période</td><td class="n">572</td><td class="n">75 260</td><td class="n">31</td><td class="n">4 487</td><td class="n best">94,0 %</td><td class="n">0,62</td><td class="n">1,06</td></tr>
+      <tr><td>Échantillonnage, daté milieu de période</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">0,22</td><td class="n">1,06</td></tr>
+      <tr><td>Moyenne glissante centrée (W = 30)</td><td class="n">600</td><td class="n">78 951</td><td class="n">32</td><td class="n">6 228</td><td class="n">92,1 %</td><td class="n best">0,14</td><td class="n best">0,95</td></tr>
+    </tbody>
+  </table></div>
+  <p>L'essentiel du défaut de la moyenne par période (0,62 °C) vient de sa datation en fin de fenêtre, soit 1 s de retard. Même recalée au milieu de sa période, elle reste moins précise (0,22 °C) que la moyenne glissante centrée (0,14 °C), car ses fenêtres ne se chevauchent pas et contiennent un nombre variable d'échantillons. La moyenne glissante coûte un peu de latence et quelques octets de plus par message, pour un débit montant identique.</p>
+</section>
+
+<!-- ===================================================== EXTRA -->
+<div class="part" id="extra">
+  <span class="kicker">Travail supplémentaire</span>
+  <h2 style="margin-top:4px">Chaîne complète : simulateur, edge, dashboards</h2>
+</div>
+<p>En plus des TP, la chaîne a été rendue permanente et observable de bout en bout, avec quatre capteurs (température et humidité DHT, pression, qualité d'air MQ135 en ppm de CO₂).</p>
+
+<section id="x-gateway">
+  <h3>Passerelle edge sur le Raspberry Pi</h3>
+  <p><code>edge/edge_gateway.py</code> est un service systemd (<code>edge-gateway.service</code>) qui généralise les étapes 2 et 3 :</p>
+  <ul>
+    <li>abonnement à <code>sensors/+/raw</code> et réduction par capteur, avec trois types de moyenne :
+      <code>sampling</code> (moyenne des valeurs reçues pendant la période, datée de la fin de la période),
+      <code>moving</code> (moyenne glissante <b>centrée</b> sur les <i>window</i> dernières valeurs, datée du centre de la fenêtre par le champ <code>ts_center</code>, comme à l'étape 3)
+      ou <code>passthrough</code> (aucune réduction) ;</li>
+    <li>deux paramètres : la <b>période</b> fixe le rythme d'envoi vers le cloud (un message par capteur et par période, donc le débit sortant), la <b>fenêtre</b> fixe le nombre de valeurs moyennées en mode <code>moving</code> (plus grande, la courbe est plus lisse mais réagit plus lentement) ;</li>
+    <li>publication de chaque valeur réduite (avec min, max et nombre d'échantillons fusionnés) en local (<code>edge/&lt;capteur&gt;/filtered</code>, pour Node-RED) et vers l'EC2 (<code>cloud/&lt;capteur&gt;</code>) ;</li>
+    <li>débits entrant et sortant mesurés chaque seconde (taille réelle des paquets PUBLISH) et publiés sur <code>edge/stats</code> et <code>cloud/edge/stats</code> ;</li>
+    <li>détection de dépassement de seuil à l'edge (30 °C, 80 %, 600 ppm), envoyée immédiatement sur <code>cloud/alerts</code> sans attendre la période de réduction ;</li>
+    <li>santé du Pi (CPU, mémoire, charge, uptime) toutes les 5 s, et statut en ligne/hors ligne par <i>last will</i> MQTT retenu ;</li>
+    <li>mode, période et fenêtre modifiables à chaud par un message JSON sur <code>edge/control</code>.</li>
+  </ul>
+</section>
+
+<section id="x-topics">
+  <h3>Topics, messages et rôle de chaque broker</h3>
+  <p>Toutes les charges utiles sont en JSON. MQTT ne transporte aucune date dans un PUBLISH, donc chaque message porte son horodatage <code>ts</code> (temps Unix en secondes, avec les millisecondes). Il sert à tracer les courbes au bon instant même si le réseau retarde ou met en file les messages, à dater une moyenne (<code>ts_center</code>), à ordonner les messages et, avec <code>seq</code>, à repérer les pertes.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Broker</th><th>Adresse</th><th>Rôle</th></tr></thead>
+    <tbody>
+      <tr><td>Edge (Raspberry Pi)</td><td><code>192.168.174.133:1883</code>, sans mot de passe (réseau local)</td><td>Point central de l'edge : reçoit les données brutes des capteurs ; la passerelle et Node-RED les lisent ; le simulateur y lit les résultats du Pi.</td></tr>
+      <tr><td>Cloud (EC2)</td><td><code>13.60.75.46:1883</code>, comptes <code>edge</code> / <code>viewer</code> + ACL</td><td>Ne reçoit que les données réduites ; lu par le dashboard Next.js et par le simulateur.</td></tr>
+      <tr><td>PC (Windows)</td><td><code>192.168.174.1:1883</code></td><td>Utilisé seulement pour les essais du TP1 (pub/sub Windows, Pi → PC « module principal »).</td></tr>
+    </tbody>
+  </table></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Topic</th><th>Broker</th><th>Émetteur → lecteurs</th><th>Contenu</th></tr></thead>
+    <tbody>
+      <tr><td><code>sensors/&lt;capteur&gt;/raw</code></td><td>Pi</td><td>simulateur → passerelle, Node-RED</td><td><code>{"seq": 204, "ts": 1792628205.884, "value": 18.446, "unit": "°C"}</code></td></tr>
+      <tr><td><code>edge/&lt;capteur&gt;/filtered</code></td><td>Pi</td><td>passerelle → Node-RED, simulateur</td><td><code>{"ts", "value", "n", "unit", "method", "min", "max", "ts_center"}</code></td></tr>
+      <tr><td><code>edge/stats</code> (1 s)</td><td>Pi</td><td>passerelle → simulateur, Node-RED</td><td><code>{"in_msgs_s", "in_bytes_s", "out_msgs_s", "out_bytes_s", "total_…", "reduction_pct", "mode", "period", "window"}</code></td></tr>
+      <tr><td><code>edge/system</code> (5 s)</td><td>Pi</td><td>passerelle → Node-RED</td><td><code>{"cpu_pct", "mem_used_pct", "load1", "cpus", "uptime_s", "host"}</code></td></tr>
+      <tr><td><code>edge/alerts</code></td><td>Pi</td><td>passerelle → Node-RED, simulateur</td><td><code>{"sensor", "value", "limit", "state": "ALARM" | "OK"}</code></td></tr>
+      <tr><td><code>edge/control</code></td><td>Pi</td><td>simulateur, Node-RED → passerelle</td><td><code>{"mode": "sampling", "period": 2, "window": 30}</code></td></tr>
+      <tr><td><code>edge/config</code> (retenu)</td><td>Pi</td><td>passerelle → simulateur</td><td>configuration courante <code>{"mode", "period", "window"}</code></td></tr>
+      <tr><td><code>cloud/&lt;capteur&gt;</code></td><td>EC2</td><td>passerelle → dashboard, simulateur</td><td>comme <code>edge/&lt;capteur&gt;/filtered</code></td></tr>
+      <tr><td><code>cloud/edge/stats</code>, <code>cloud/edge/system</code>, <code>cloud/alerts</code></td><td>EC2</td><td>passerelle → dashboard</td><td>copies de <code>edge/stats</code>, <code>edge/system</code>, <code>edge/alerts</code></td></tr>
+      <tr><td><code>cloud/edge/status</code> (retenu, <i>last will</i>)</td><td>EC2</td><td>passerelle → dashboard</td><td><code>{"state": "online"}</code>, ou <code>{"state": "offline"}</code> publié par le broker si le Pi se déconnecte</td></tr>
+    </tbody>
+  </table></div>
+  <p>Signification des champs réduits : <code>value</code> est la moyenne envoyée, <code>n</code> le nombre de valeurs brutes reçues pendant la période (par exemple « 18 raw msgs → 1 msg »), <code>min</code>/<code>max</code> les extrêmes de ces valeurs, <code>method</code> le type de moyenne. Avec 4 capteurs à 10 msg/s et une période de 1 s, le Pi reçoit environ 40 msg/s et n'en envoie que 4 au cloud.</p>
+</section>
+
+<section id="x-sim">
+  <h3>Simulateur de capteurs PyQt6</h3>
+  <p><code>simulator/iot_simulator.py</code> (PyQt6 + pyqtgraph) génère les quatre capteurs avec le modèle bitperfect, en arrivées périodiques ou poissonniennes (λ réglable par capteur). Il publie vers le broker du Pi et écoute à la fois ce que le Pi produit et ce qui arrive réellement sur l'EC2.</p>
+  <p>L'onglet « Live sensors » reprend la présentation des figures du TP2 : pour chaque capteur, la courbe <b>originale</b> (capteur → edge, bleu fin) et la courbe <b>réduite</b> telle qu'elle arrive sur le cloud (edge → cloud, orange avec points), sur un axe en secondes depuis le démarrage. Le panneau « Edge filter on the Raspberry Pi » permet de choisir le <b>type de moyenne</b> (moyenne par période, moyenne glissante centrée ou pass-through), la période, la fenêtre et la durée affichée (<i>plot span</i>). « Apply to edge » publie le choix sur <code>edge/control</code> ; le titre des graphes et la courbe orange repartent avec le nouveau réglage.</p>
+  <figure>
+    <a class="shot" href="img/sim_live_sampling.png" target="_blank" rel="noopener"><img src="img/sim_live_sampling.png" alt="Simulateur : moyenne par période de 2 s contre données capteur" loading="lazy"></a>
+    <figcaption><b>Fig. 34</b> — Type de moyenne « Sampling (mean per period) », période 2 s : comme à l'étape 2, chaque point orange est la moyenne des valeurs reçues pendant 2 s, placé à la fin de la période. On retrouve le retard et l'aspect en escalier.</figcaption>
+  </figure>
+  <figure>
+    <a class="shot" href="img/sim_live_moving.png" target="_blank" rel="noopener"><img src="img/sim_live_moving.png" alt="Simulateur : moyenne glissante centrée contre données capteur" loading="lazy"></a>
+    <figcaption><b>Fig. 35</b> — Type de moyenne « Centred moving average », fenêtre 30 échantillons, envoi toutes les 2 s : comme à l'étape 3, chaque point est placé au centre de sa fenêtre et la courbe réduite suit la courbe du capteur, pour le même débit vers le cloud (réduction affichée : 91,2 %).</figcaption>
+  </figure>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/sim_live_anomaly.png" target="_blank" rel="noopener"><img src="img/sim_live_anomaly.png" alt="Injection d'une anomalie" loading="lazy"></a>
+      <figcaption><b>Fig. 36</b> — Bouton « Anomaly 10 s » : +15 °C et +250 ppm pendant 10 s. Le Pi lève une alerte (fig. 39 et 44). Capture faite avec la première version de l'onglet, avant le passage au style des figures du TP2.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/sim_flow.png" target="_blank" rel="noopener"><img src="img/sim_flow.png" alt="Animation du flux de données PC vers Pi vers EC2" loading="lazy"></a>
+      <figcaption><b>Fig. 37</b> — Onglet « Data flow » : chaque message est animé sur son saut, 38,6 msg/s bruts PC → Pi contre 5,6 msg/s Pi → EC2.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/sim_3d.png" target="_blank" rel="noopener"><img src="img/sim_3d.png" alt="Vue 3D de la trajectoire des capteurs" loading="lazy"></a>
+      <figcaption><b>Fig. 38</b> — Vue 3D (OpenGL) : trajectoire de l'état (température, humidité, CO₂ normalisés), en rotation.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/sim_messages.png" target="_blank" rel="noopener"><img src="img/sim_messages.png" alt="Journal des messages reçus par l'EC2" loading="lazy"></a>
+      <figcaption><b>Fig. 39</b> — Journal des messages arrivés sur l'EC2 et des alertes de l'edge.</figcaption>
+    </figure>
+  </div>
+  <figure>
+    <a class="shot" href="img/sim_throughput.png" target="_blank" rel="noopener"><img src="img/sim_throughput.png" alt="Fenêtre de débit du simulateur" loading="lazy"></a>
+    <figcaption><b>Fig. 40</b> — Fenêtre séparée « Throughput monitor » : octets et messages par seconde publiés par le PC, reçus par le Pi et arrivés sur l'EC2. Sur 30 s : 3 569 o/s envoyés, 875 o/s arrivés au cloud, soit 75,5 % d'économie, télémétrie du Pi comprise.</figcaption>
+  </figure>
+  <p><b>Comment le simulateur mesure le débit.</b> Il n'écoute pas l'interface réseau : il travaille au niveau MQTT, à partir de trois sources.</p>
+  <ul>
+    <li><b>PC → Pi :</b> il compte lui-même chaque message qu'il publie et la taille du paquet PUBLISH (en-tête fixe + topic + charge utile).</li>
+    <li><b>Reçu par le Pi :</b> il lit les compteurs que la passerelle publie chaque seconde sur <code>edge/stats</code>, sur le broker du Pi.</li>
+    <li><b>Arrivé sur l'EC2 :</b> il est abonné à <code>cloud/#</code> sur le broker EC2 (compte <code>viewer</code>) et compte les messages reçus.</li>
+  </ul>
+  <p>Un <code>QTimer</code> relève les compteurs chaque seconde et les range dans des tampons circulaires (<code>collections.deque</code>, 300 points). Les callbacks paho-mqtt tournent dans leur propre thread et déposent les événements dans une <code>queue.Queue</code>, vidée toutes les 50 ms par le thread graphique ; les courbes sont redessinées toutes les 250 ms. Bibliothèques : PyQt6 (interface), pyqtgraph et pyqtgraph.opengl / PyOpenGL (courbes 2D et 3D), paho-mqtt, numpy.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>Simulateur</th><th>Wireshark</th></tr></thead>
+    <tbody>
+      <tr><td>Source</td><td>messages MQTT (niveau application)</td><td>paquets réels sur VMnet8 (niveau réseau)</td></tr>
+      <tr><td>Taille comptée</td><td>paquet MQTT seul (≈ 90 o par mesure brute)</td><td>trame complète Ethernet + IP + TCP + MQTT (≈ 140 à 150 o)</td></tr>
+      <tr><td>Exemple, même trafic</td><td>≈ 3,6 ko/s entrants</td><td>≈ 5,8 ko/s entrants</td></tr>
+    </tbody>
+  </table></div>
+  <p>Les valeurs absolues diffèrent à cause des en-têtes réseau, environ 66 octets par paquet, mais le pourcentage de réduction reste du même ordre.</p>
+</section>
+
+<section id="x-ws-live">
+  <h3>Mesure en direct dans Wireshark, une seule fenêtre</h3>
+  <p>Pour suivre les deux sens en même temps, une seule capture sur VMnet8 suffit, avec le filtre de capture <code>tcp dst port 1883 and (dst host 192.168.174.133 or dst host 13.60.75.46)</code> et le profil Wireshark <code>TP-IoT</code>. Dans <i>Statistics › I/O Graphs</i>, deux graphes préréglés en octets par seconde se superposent :</p>
+  <ul>
+    <li><b>IN</b>, données entrantes dans la Raspberry Pi : <code>mqtt.msgtype==3 &amp;&amp; ip.dst==192.168.174.133</code> (bleu) ;</li>
+    <li><b>OUT</b>, données sortantes du Pi vers l'EC2 : <code>mqtt.msgtype==3 &amp;&amp; ip.dst==13.60.75.46</code> (orange).</li>
+  </ul>
+  <figure>
+    <a class="shot" href="img/ws_live_in_out.png" target="_blank" rel="noopener"><img src="img/ws_live_in_out.png" alt="Wireshark I/O Graph en direct : données entrantes et sortantes du Pi" loading="lazy"></a>
+    <figcaption><b>Fig. 41</b> — Capture en direct. Pendant les 40 premières secondes le simulateur n'envoie rien : la courbe bleue est nulle et la courbe orange (≈ 400 o/s) ne contient que la télémétrie du Pi (statistiques et santé). Dès que le simulateur démarre, l'entrée monte à 5–6 ko/s alors que la sortie reste autour de 0,4 à 1 ko/s.</figcaption>
+  </figure>
+</section>
+
+<section id="x-nodered">
+  <h3>Dashboard Node-RED sur le Raspberry Pi</h3>
+  <p>Node-RED 4 avec Dashboard 2.0, accessible sur <a href="http://192.168.174.133:1880/dashboard" target="_blank" rel="noopener">http://192.168.174.133:1880/dashboard</a> depuis le réseau local. Le flux est généré par <code>edge/make_nodered_flow.py</code> et déployé par l'API d'administration.</p>
+  <figure>
+    <a class="shot" href="img/nr_dashboard.png" target="_blank" rel="noopener"><img src="img/nr_dashboard.png" alt="Dashboard Node-RED : courbes brut contre filtré, jauges, débit, réduction" loading="lazy"></a>
+    <figcaption><b>Fig. 42</b> — Par capteur, une courbe brut/filtré et une jauge avec zone d'alarme. En bas : débit avant/après filtrage, pourcentage de bande passante économisée (85,3 %), CPU et mémoire du Pi, boutons de choix du mode de filtrage (publiés sur <code>edge/control</code>). Les alertes de l'edge s'affichent en notification.</figcaption>
+  </figure>
+  <figure>
+    <a class="shot" href="img/nr_editor.png" target="_blank" rel="noopener"><img src="img/nr_editor.png" alt="Éditeur Node-RED avec le flux de l'edge" loading="lazy"></a>
+    <figcaption><b>Fig. 43</b> — Le flux : entrées MQTT locales, fonctions de routage par capteur, statistiques, système et alertes, widgets du dashboard.</figcaption>
+  </figure>
+</section>
+
+<section id="x-next">
+  <h3>Dashboard cloud Next.js sur l'EC2</h3>
+  <p>Application Next.js 15 servie par nginx sur le port 80 : <a href="http://13.60.75.46/" target="_blank" rel="noopener">http://13.60.75.46/</a>. Côté serveur, un seul client MQTT (compte <code>viewer</code>, lecture seule) s'abonne à <code>cloud/#</code> et garde l'historique. Les navigateurs reçoivent les mises à jour en temps réel par Server-Sent Events. Les graphiques utilisent Apache ECharts, et echarts-gl pour la 3D.</p>
+  <figure>
+    <a class="shot" href="img/dash_overview.png" target="_blank" rel="noopener"><img src="img/dash_overview.png" alt="Page Overview du dashboard cloud" loading="lazy"></a>
+    <figcaption><b>Fig. 44</b> — Vue d'ensemble : état du Pi, 42 msg/s entrant à l'edge contre 4 msg/s vers le cloud, 85,3 % de bande passante économisée, chemin des données animé. Pour chaque capteur : valeur réduite et bande min–max des échantillons fusionnés. En bas, le journal des alertes de l'edge. La coupure vers 01:46 correspond à un redémarrage du dashboard.</figcaption>
+  </figure>
+  <div class="pair">
+    <figure>
+      <a class="shot" href="img/dash_throughput.png" target="_blank" rel="noopener"><img src="img/dash_throughput.png" alt="Page Throughput du dashboard cloud" loading="lazy"></a>
+      <figcaption><b>Fig. 45</b> — Débits : 3,6 ko/s bruts contre 531 o/s réduits, trafic mesuré à l'arrivée sur l'EC2 et réduction cumulée.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/dash_3d.png" target="_blank" rel="noopener"><img src="img/dash_3d.png" alt="Page 3D du dashboard cloud" loading="lazy"></a>
+      <figcaption><b>Fig. 46</b> — Vue 3D : trajectoire dans l'espace des capteurs, et historique normalisé de chaque capteur en barres 3D.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/dash_edge.png" target="_blank" rel="noopener"><img src="img/dash_edge.png" alt="Page Raspberry Pi du dashboard cloud" loading="lazy"></a>
+      <figcaption><b>Fig. 47</b> — Santé du Raspberry Pi vue depuis le cloud, et dernières statistiques de la passerelle.</figcaption>
+    </figure>
+    <figure>
+      <a class="shot" href="img/dash_messages.png" target="_blank" rel="noopener"><img src="img/dash_messages.png" alt="Journal MQTT du dashboard cloud" loading="lazy"></a>
+      <figcaption><b>Fig. 48</b> — Journal brut des messages reçus par le broker EC2, avec leur taille.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="difficultes">
+  <h2>Difficultés rencontrées</h2>
+  <ul>
+    <li><b>Dépôts Debian 11 i386.</b> L'image Pi Desktop est en 32 bits et le dépôt <code>bullseye-security</code> renvoie des 404 pour i386 depuis la fin du support. Les paquets ont été installés depuis le dépôt principal, avec une liste de sources temporaire passée à apt, sans modifier la configuration du Pi.</li>
+    <li><b>Node.js sur x86 32 bits.</b> Debian ne fournit que Node 12 en i386, trop ancien pour Node-RED 4. La build Node 20 <code>linux-x86</code> du projet unofficial-builds de Node.js a été utilisée.</li>
+    <li><b>Mosquitto pour Windows.</b> Le site mosquitto.org n'était joignable qu'en IPv6, absent du PC et de l'EC2. Le binaire natif 2.0.22 a été récupéré depuis les paquets MSYS2 avec ses DLL.</li>
+    <li><b>Pare-feu Windows.</b> Il a fallu autoriser <code>mosquitto.exe</code> sur le réseau privé pour que le Pi atteigne le broker du PC (§V.4).</li>
+    <li><b>Perte de connexion Pi → EC2.</b> Après un blocage de la VM, le service Windows « VMware NAT Service » s'est arrêté : le Pi gardait son accès au réseau local mais plus à Internet (« No route to host » vers l'EC2), et son horloge a dérivé d'environ 130 s faute de NTP. En QoS 0, les messages envoyés pendant la coupure sont perdus, ce qui se voit comme des trous dans les courbes. Le service doit être redémarré avec des droits administrateur. Le simulateur place désormais les moyennes par période à leur heure de réception sur le PC, pour ne plus dépendre de l'horloge du Pi.</li>
+    <li><b>Mesure du débit.</b> Le filtre d'affichage <code>mqtt.msgtype==3</code> a été préféré à un filtre par port, pour ne compter que les PUBLISH et exclure les ACK TCP et les PINGREQ.</li>
+  </ul>
+</section>
+
+<section id="conclusion">
+  <h2>Conclusion</h2>
+  <p>Le TP1 a mis en place la communication MQTT sur les trois machines : broker local sous Windows, broker edge sur le Raspberry Pi et broker cloud sécurisé sur EC2. On a utilisé les clients en ligne de commande et Python, les jokers, les topics système, et analysé les paquets dans Wireshark. Le TP2 a montré l'intérêt du traitement à l'edge : fusionner une vingtaine de mesures en un seul message réduit le trafic vers le cloud de 92 à 94 %. La méthode de fusion compte : la moyenne glissante centrée suit la courbe du capteur nettement mieux qu'une simple moyenne par période, pour le même débit. Le simulateur, la passerelle permanente et les deux tableaux de bord rendent ce gain visible en temps réel, du capteur jusqu'au navigateur. Le simulateur permet en plus de choisir le type de moyenne appliqué par le Pi et de comparer immédiatement la courbe originale et la courbe reçue par le cloud, pendant que Wireshark montre les débits entrant et sortant dans une seule fenêtre.</p>
+</section>
+
+<section id="annexe">
+  <h2>Annexe · fichiers du projet</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Chemin</th><th>Contenu</th></tr></thead>
+    <tbody>
+      <tr><td><code>tp1/</code></td><td><code>mqtt_publisher.py</code>, <code>mqtt_subscriber.py</code>, <code>single_publish.py</code>, configuration du broker Windows, lanceurs <code>.bat</code> des démonstrations</td></tr>
+      <tr><td><code>tp2/</code></td><td><code>sensor_sim.py</code> (port du simulateur), <code>step1_1</code> à <code>step3_3</code>, <code>cloud_env.py</code></td></tr>
+      <tr><td><code>edge/</code></td><td><code>edge_gateway.py</code>, <code>make_nodered_flow.py</code>, <code>node-red-flows.json</code></td></tr>
+      <tr><td><code>simulator/</code></td><td><code>iot_simulator.py</code> (PyQt6) ; lancement : <code>python iot_simulator.py</code> puis « Start » ; type de moyenne, période et fenêtre dans le panneau « Edge filter », puis « Apply to edge »</td></tr>
+      <tr><td><code>cloud/</code></td><td><code>dashboard/</code> (Next.js), configuration Mosquitto et ACL, service systemd, site nginx</td></tr>
+      <tr><td><code>report/captures/</code></td><td>Captures Wireshark <code>.pcapng</code> de chaque étape (profil Wireshark <code>TP-IoT</code> avec les graphes I/O préréglés)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+</main>
+
+<footer class="end">El Dabbabi Mouine, Lakhder Mohamed Helmi, Saddoud Mohamed Amine, Bouchaala Oussema · RT5 INSAT · Compte rendu TP1 et TP2, Technologies et Protocoles pour l'IoT · 22 octobre 2026</footer>
+</div>

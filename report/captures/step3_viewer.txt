@@ -1,0 +1,4 @@
+recording 58.0s ...
+sensor side : 569 msgs, 28776 payload bytes
+cloud side  : 29 msgs, 3440 payload bytes
+reduction   : 94.9% messages, 88.0% payload bytes

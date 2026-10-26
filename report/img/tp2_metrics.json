@@ -1,0 +1,29 @@
+{
+  "sampling": {
+    "raw_msgs": 521,
+    "cloud_msgs": 29,
+    "raw_bytes": 26335,
+    "cloud_bytes": 2023,
+    "rmse": 0.6226423314991681,
+    "bias": -0.03119292853402813,
+    "jitter": 1.0621881511141738
+  },
+  "sampling_centred": {
+    "raw_msgs": 521,
+    "cloud_msgs": 29,
+    "raw_bytes": 26335,
+    "cloud_bytes": 2023,
+    "rmse": 0.22000689325161607,
+    "bias": -0.019800693223703033,
+    "jitter": 1.0621881511141738
+  },
+  "moving_average": {
+    "raw_msgs": 569,
+    "cloud_msgs": 29,
+    "raw_bytes": 28776,
+    "cloud_bytes": 3440,
+    "rmse": 0.13947651633716568,
+    "bias": -0.026940235215446556,
+    "jitter": 0.9475806539093472
+  }
+}
